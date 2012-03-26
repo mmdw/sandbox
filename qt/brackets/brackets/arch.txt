@@ -1,0 +1,143 @@
+CSS:
+textEdit->insertHtml( 
+	"	<style type=\"text/css\">\n"	
+	"   table {\n"
+	"           border-collapse: collapse;\n"
+	"           border: 1px solid grey;\n"
+    "           font-family: Tahoma;\n"	
+	"           font-size: 11px;\n"	
+    "           }\n"
+	"   td,th { text-align: center; border: 1px solid grey; vertical-align: top; padding: 7;}\n"		 
+	"   th { background-color: #97da97;}\n" // #D3EDF6 <-- для заголовка
+	"</style>\n <table border = 1 cellpadding = 7 bordercolor = #000000> <tr><td>X</td><td>X</td> <td>X</td><td>X</td></tr></table>");
+	
+	
+void HtmlBuilder::parse_beg() 
+{
+	html +=
+	"<html>\n"
+	"<head>\n"
+	"<style type=\"text/css\">\n"	
+	"   table {\n"
+	"           border-collapse: collapse;\n"
+	"           border: 1px solid grey;\n"
+    "           font-family: Tahoma;\n"	
+	"           font-size: 11px;\n"	
+    "           }\n"
+	"   td,th { text-align: center; border: 1px solid grey; vertical-align: top; padding: 7;}\n"		 
+	"   th { background-color: #97da97;}\n" // #D3EDF6 <-- для заголовка
+	"</style>\n"
+	"</head>\n"
+	"<body>\n"
+	"<table>\n";
+}
+
+// --BEGIN------ HtmlBuilder.cpp---- 
+#include "StdAfx.h"
+#include "HtmlBuilder.h"
+#include <iostream>
+
+using namespace std;
+
+HtmlBuilder::HtmlBuilder(const string& istr) : Parser(istr)
+{
+	html.clear();
+	valid = parse();
+}
+
+void HtmlBuilder::parse_beg() 
+{
+	html +=
+	"<html>\n"
+	"<head>\n"
+	"<style type=\"text/css\">\n"	
+	"   table {\n"
+	"           border-collapse: collapse;\n"
+	"           border: 1px solid grey;\n"
+    "           font-family: Tahoma;\n"	
+	"           font-size: 11px;\n"	
+    "           }\n"
+	"   td,th { text-align: center; border: 1px solid grey; vertical-align: top; padding: 7;}\n"		 
+	"   th { background-color: #97da97;}\n" // #D3EDF6 <-- для заголовка
+	"</style>\n"
+	"</head>\n"
+	"<body>\n"
+	"<table>\n";
+}
+
+void HtmlBuilder::parse_end() 
+{
+	html += "</table></body></html>";
+}
+
+void HtmlBuilder::parse_read_ch() 
+{
+	html += "<td>";
+	html += ch;
+	html += "</td>";
+}
+
+void HtmlBuilder::parse_empty_char()
+{
+	html += "<td>";
+	html += 'E';
+	html += "</td>";
+}
+
+void HtmlBuilder::parse_read_S_beg()
+{
+	html +=	"<td>" "<table>" "<tr>";
+/* Не совсем так, как нужно */
+	if (ch == '$')
+		html +=	"<th colspan = 1>S</th>";
+	else
+		html +=	"<th colspan = 3>S</th>";
+
+	html += "</tr>";
+}
+
+void HtmlBuilder::parse_read_S_end() 
+{
+	html +=	"</table>" "</td>";
+}
+
+
+void HtmlBuilder::parse_read_S_round_beg() 
+{
+	html += "<td>" "<table>" "<tr>";
+
+	if (ch == ')')
+		html +=	"<th colspan = 1>S_ROUND</th>";
+	else
+		html +=  "<th colspan = 3>S_ROUND</th>";
+
+	html += "</tr>";
+}
+
+void HtmlBuilder::parse_read_S_round_end() 
+{
+	html +="</table>" "</td>";
+}
+
+void HtmlBuilder::parse_read_S_square_beg() 
+{
+	html +="<td>" "<table>" "<tr>";
+
+	if (ch == ']')
+		html +=	"<th colspan = 1>S_SQUARE</th>";
+	else
+		html += "<th colspan = 3>S_SQUARE</th>";
+
+	html +=	"</tr>";
+}
+
+void HtmlBuilder::parse_read_S_square_end() 
+{
+	html += "</table>" "</td>";
+}
+
+string HtmlBuilder::getHtml() const
+{
+	return html;
+}
+// --END------ HtmlBuilder.cpp---- 
